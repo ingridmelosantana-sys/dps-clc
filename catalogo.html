@@ -1,0 +1,531 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#09090b">
+  <meta name="description" content="Meu catálogo pessoal de filmes.">
+  <title>CineVerse — Meu Catálogo</title>
+
+  <style>
+    :root {
+      --bg: #09090b;
+      --surface: #151519;
+      --surface-2: #202026;
+      --primary: #e50914;
+      --primary-light: #ff3540;
+      --text: #f8f8fa;
+      --muted: #a1a1aa;
+      --border: rgba(255,255,255,.09);
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at top, #241014 0%, transparent 45%),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+    }
+
+    button, input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 18px 5%;
+      background: rgba(9,9,11,.88);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-size: 1.45rem;
+      font-weight: 900;
+      letter-spacing: -1px;
+      white-space: nowrap;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    .topbar small {
+      color: var(--muted);
+    }
+
+    .hero {
+      max-width: 1400px;
+      margin: auto;
+      padding: 65px 5% 35px;
+    }
+
+    .eyebrow {
+      color: var(--primary-light);
+      text-transform: uppercase;
+      font-weight: 800;
+      font-size: .76rem;
+      letter-spacing: 3px;
+    }
+
+    .hero h1 {
+      max-width: 700px;
+      margin: 14px 0;
+      font-size: clamp(2.2rem, 6vw, 4.5rem);
+      line-height: 1.04;
+      letter-spacing: -2px;
+    }
+
+    .hero h1 span {
+      color: var(--primary);
+    }
+
+    .hero p {
+      max-width: 560px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .toolbar {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px 5%;
+    }
+
+    .search {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      max-width: 550px;
+      padding: 0 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      transition: border-color .2s;
+    }
+
+    .search:focus-within {
+      border-color: var(--primary);
+    }
+
+    .search input {
+      width: 100%;
+      min-width: 0;
+      padding: 15px 0;
+      color: white;
+      background: transparent;
+      border: 0;
+      outline: none;
+    }
+
+    .search input::placeholder {
+      color: #777780;
+    }
+
+    .catalog {
+      max-width: 1400px;
+      min-height: 260px;
+      margin: auto;
+      padding: 20px 5% 70px;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .counter {
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .movie {
+      min-width: 0;
+      padding: 22px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      animation: appear .45s ease both;
+      transition: transform .25s, border-color .25s,
+                  box-shadow .25s;
+    }
+
+    .movie:hover {
+      transform: translateY(-5px);
+      border-color: rgba(229,9,20,.6);
+      box-shadow: 0 14px 35px rgba(0,0,0,.35);
+    }
+
+    .movie-title {
+      margin: 0 0 13px;
+      color: var(--text);
+      font-size: 1.1rem;
+      font-weight: 800;
+      line-height: 1.4;
+    }
+
+    .movie-description {
+      margin: 0;
+      color: var(--muted);
+      font-size: .91rem;
+      line-height: 1.7;
+    }
+
+    .movie-line {
+      width: 38px;
+      height: 3px;
+      margin-bottom: 17px;
+      background: var(--primary);
+      border-radius: 5px;
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      padding: 55px 15px;
+      color: var(--muted);
+      text-align: center;
+      background: var(--surface);
+      border: 1px dashed #393941;
+      border-radius: var(--radius);
+    }
+
+    .empty strong {
+      display: block;
+      margin-bottom: 10px;
+      color: white;
+      font-size: 1.15rem;
+    }
+
+    .footer {
+      padding: 25px 5%;
+      color: var(--muted);
+      text-align: center;
+      font-size: .83rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer span {
+      color: var(--primary);
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      .topbar {
+        padding: 15px 5%;
+      }
+
+      .topbar small {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 45px;
+      }
+
+      .hero h1 {
+        letter-spacing: -1px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .section-heading h2 {
+        font-size: 1.2rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <div class="logo">CINE<span>VERSE</span> 🎬</div>
+    <small>Seu universo de filmes</small>
+  </header>
+
+  <main>
+
+    <section class="hero">
+      <div class="eyebrow">Seu cinema particular</div>
+
+      <h1>
+        Histórias que merecem
+        <span>ser vistas.</span>
+      </h1>
+
+      <p>
+        Explore sua coleção e descubra seu próximo
+        filme favorito em um catálogo feito para você.
+      </p>
+    </section>
+
+    <section class="toolbar" aria-label="Pesquisa de filmes">
+
+      <label class="search">
+        <span aria-hidden="true">⌕</span>
+
+        <input
+          id="search"
+          type="search"
+          placeholder="Buscar um filme pelo nome..."
+          autocomplete="off"
+          aria-label="Buscar filmes"
+        >
+      </label>
+
+    </section>
+
+    <section class="catalog">
+
+      <div class="section-heading">
+        <h2>Minha coleção</h2>
+        <span class="counter" id="counter">
+          Preparando catálogo...
+        </span>
+      </div>
+
+      <div class="grid" id="catalogo" aria-live="polite">
+        <div class="empty">
+          Carregando seus filmes...
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    Feito para quem ama cinema <span>♥</span>
+    <br><br>
+    CineVerse — Seu catálogo particular.
+  </footer>
+
+  <script>
+
+    // ==========================================
+    // ADICIONE OU EDITE SEUS FILMES AQUI
+    // Cada filme possui nome e descrição.
+    // ==========================================
+
+    const meusFilmes = [
+
+      {
+        nome: "Vingadores: Doomsday",
+        descricao: "Os maiores heróis do universo Marvel precisam enfrentar uma ameaça capaz de colocar toda a existência em perigo."
+      },
+
+      {
+        nome: "Toy Story 5",
+        descricao: "Woody, Buzz e seus amigos enfrentam novos desafios em um mundo onde a tecnologia transforma a infância."
+      },
+
+      {
+        nome: "Homem-Aranha: Um Novo Dia",
+        descricao: "Peter Parker encara uma nova fase de sua vida enquanto tenta equilibrar suas responsabilidades e os desafios de ser o Homem-Aranha."
+      },
+
+      {
+        nome: "Duna: Parte Três",
+        descricao: "A jornada de Paul Atreides continua em meio a conflitos políticos, disputas pelo poder e acontecimentos que podem mudar o destino do universo."
+      },
+
+      {
+        nome: "O Diabo Veste Prada 2",
+        descricao: "O mundo da moda retorna com novos conflitos, desafios profissionais e reencontros inesperados."
+      },
+
+      {
+        nome: "Godzilla Minus Zero",
+        descricao: "Uma nova ameaça gigantesca coloca a humanidade diante de um cenário de destruição e sobrevivência."
+      },
+
+      {
+        nome: "O Próximo Outono",
+        descricao: "Uma história sobre mudanças, descobertas e escolhas que podem transformar completamente o futuro."
+      }
+
+    ];
+
+    const catalogo = document.getElementById("catalogo");
+    const busca = document.getElementById("search");
+    const contador = document.getElementById("counter");
+
+    let filmes = meusFilmes;
+
+    // ==========================================
+    // CRIAR CARTÃO DO FILME
+    // ==========================================
+
+    function criarCartao(filme, indice) {
+
+      const card = document.createElement("article");
+
+      card.className = "movie";
+      card.style.animationDelay =
+        `${Math.min(indice * 35, 350)}ms`;
+
+      const linha = document.createElement("div");
+      linha.className = "movie-line";
+
+      const titulo = document.createElement("h3");
+      titulo.className = "movie-title";
+      titulo.textContent = filme.nome;
+
+      const descricao = document.createElement("p");
+      descricao.className = "movie-description";
+      descricao.textContent = filme.descricao;
+
+      card.append(linha, titulo, descricao);
+
+      return card;
+    }
+
+    // ==========================================
+    // PESQUISAR E MOSTRAR FILMES
+    // ==========================================
+
+    function aplicarFiltros() {
+
+      const termo = busca.value
+        .trim()
+        .toLocaleLowerCase("pt-BR");
+
+      const filtrados = filmes.filter(filme => {
+
+        return (
+          filme.nome
+            .toLocaleLowerCase("pt-BR")
+            .includes(termo)
+        );
+
+      });
+
+      catalogo.replaceChildren();
+
+      if (!filtrados.length) {
+
+        const vazio = document.createElement("div");
+        vazio.className = "empty";
+
+        const titulo = document.createElement("strong");
+        titulo.textContent = "Nenhum filme encontrado";
+
+        const mensagem = document.createElement("span");
+        mensagem.textContent =
+          "Tente pesquisar outro título.";
+
+        vazio.append(titulo, mensagem);
+
+        catalogo.appendChild(vazio);
+
+      } else {
+
+        const fragmento = document.createDocumentFragment();
+
+        filtrados.forEach((filme, indice) => {
+
+          fragmento.appendChild(
+            criarCartao(filme, indice)
+          );
+
+        });
+
+        catalogo.appendChild(fragmento);
+
+      }
+
+      contador.textContent =
+        `${filtrados.length} ${
+          filtrados.length === 1
+            ? "filme"
+            : "filmes"
+        }`;
+
+    }
+
+    // ==========================================
+    // EVENTO DE PESQUISA
+    // ==========================================
+
+    busca.addEventListener("input", aplicarFiltros);
+
+    // ==========================================
+    // INICIAR CATÁLOGO
+    // ==========================================
+
+    function carregarCatalogo() {
+
+      filmes = meusFilmes;
+
+      aplicarFiltros();
+
+    }
+
+    carregarCatalogo();
+
+  </script>
+
+</body>
+</html>
